@@ -9,7 +9,7 @@
             <form action="/index" method="post">
                 <input id="newuser" name="newuser" type="text">
                 <label for="newuser">Nickname</label>
-                <button type="submit">Enter</button>
+                <button type="submit" onClick="<%- "setUsername('newuser')" %>">Enter</button>
             </form>
         </main>
     </body>

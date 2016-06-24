@@ -1,4 +1,15 @@
-$(function() {
+//to be called by the submit button on the username form
+function setUsername (id) {
+  var username = document.getElementById(id).value; //look at cleanInput for this...
+
+  // If the username is valid
+  if (username) {
+    // Tell the server your username
+    socket.emit('_add_user', username);
+  }
+}
+
+/*$(function() {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
   var COLORS = [

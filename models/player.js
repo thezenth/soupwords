@@ -1,4 +1,5 @@
 var Player = {
+    "name": "",
     "words": [],
     "points": 0
 }
