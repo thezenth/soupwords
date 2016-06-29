@@ -8,12 +8,33 @@
             var gameInfo = {};
             socket.on('_update-game', function(info) {
                 gameInfo = info;
+                if (gameInfo.player[0].words.length > 0) {
+                    if (document.getElementById('user_1')) {
+                        for (var i = 0; i < gameInfo.player[0].words.length; i++) {
+                            var newP = document.createElement('p');
+                            newP.innerHTML = gameInfo.player[0].words[i];
+                            document.getElementById('user_1').appendChild(newP);
+                        }
+                    }
+                }
+                if (gameInfo.player[1].words.length > 0) {
+                    if (document.getElementById('user_2')) {
+                        for (var i = 0; i < gameInfo.player[1].words.length; i++) {
+                            var newP = document.createElement('p');
+                            newP.innerHTML = gameInfo.player[1].words[i];
+                            document.getElementById('user_2').appendChild(newP);
+                        }
+                    }
+                }
             });
             socket.on('_begin-game', function() {
                 var temp = document.getElementById('soup-screen-temp');
-                for(var i = 0; i<16; i++) {
-                    temp.content.querySelector('#sq_' + i).innerHTML = gameInfo.letters[i];
+                for (var a = 0; a < 16; a++) {
+                    temp.content.querySelector('#sq_' + a).innerHTML = gameInfo.letters[a];
                 }
+                temp.content.querySelector('#title_1').innerHTML = gameInfo.players[0].name;
+                temp.content.querySelector('#title_2').innerHTML = gameInfo.players[1].name;
+
                 //Clear out what is already there
                 document.getElementById('main').innerHTML = "";
                 //Append the template
@@ -32,9 +53,16 @@
                 }
             }
 
-            function beginGame(data) {
-                document.getElementById('test').innerHTML = "poopy";
-                //data.numUsers and data.username
+            function submitWord(id) {
+                var word = document.getElementById(id).value; //look at cleanInput for this...
+
+                if (word) {
+                    socket.emit('_submit-word', word);
+                }
+            }
+
+            function doDisconnect() {
+                socket.emit('_disconnect');
             }
         </script>
 
@@ -46,6 +74,12 @@
             <div class="col s1" id="sq_1">2</div>
             <div class="col s1" id="sq_2">3</div>
             <div class="col s1" id="sq_3">4</div>
+            <div class="col s2" id="user_1">
+                <span id="title_1"></span>
+            </div>
+            <div class="col s2" id="user_2">
+                <span id="title_2"></span>
+            </div>
         </div>
         <div class="row" id="row2">
             <div class="col s1" id="sq_4">1</div>
@@ -64,6 +98,13 @@
             <div class="col s1" id="sq_13">2</div>
             <div class="col s1" id="sq_14">3</div>
             <div class="col s1" id="sq_15">4</div>
+        </div>
+        <div class="row">
+            <form onsubmit="return false;">
+                <input id="newword" name="newword" type="text">
+                <label for="newword">Words</label>
+                <button onClick="<%- " setUsername('newword')" %>" id="word-form">Submit</button>
+            </form>
         </div>
     </template>
 

@@ -5,6 +5,8 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
 
+var boggle = require('boggle');
+
 //app.use(require('./controllers'));
 
 //file system io
@@ -39,6 +41,7 @@ app.get('/', function(req, res) {
 
 // Game =========================================
 var allLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+var words = ['BUTT'];
 function randomInt (low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
@@ -54,6 +57,10 @@ function updateClients(gameInfo) {
 
 gnsp.on('connection', function(socket) {
     var addedUser = false;
+
+    socket.on('_disconnect', function() {
+        socket.disconnect();
+    });
 
     // when the client emits 'add user', this listens and executes
     socket.on('_add_user', function(username) {
@@ -84,6 +91,10 @@ gnsp.on('connection', function(socket) {
                         fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                     }
                     if(true) {
+                        parsed['boggled'] = boggle(parsed['letters'].join(''));
+                        fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                    }
+                    if(true) {
                         if(true) { updateClients(parsed); }
                         gnsp.emit('_begin-game');
                     }
@@ -92,5 +103,18 @@ gnsp.on('connection', function(socket) {
             }
         });
         addedUser = true;
+    });
+    socket.on('_submit-word', function(word) {
+        if(word in words) {
+            fs.readFile('./session/game.json', function(err, jData) {
+                if (err) {
+                    console.log(err);
+                }
+
+                if(jData) {
+                    console.log('got some data');
+                }
+            })
+        }
     });
 });
