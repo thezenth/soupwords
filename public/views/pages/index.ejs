@@ -34,7 +34,7 @@
                             for (var i = 0; i < gameInfo.players[0].words.length; i++) {
                                 var newP = document.createElement('p');
                                 newP.innerHTML = gameInfo.players[0].words[i];
-                                document.getElementById('user_1_info').appendChild(newP);
+                                document.getElementById('user_1_info').appendChild(newP.content.cloneNode(true));
                             }
                         }
                     }
@@ -45,7 +45,7 @@
                             for (var i = 0; i < gameInfo.players[1].words.length; i++) {
                                 var newP = document.createElement('p');
                                 newP.innerHTML = gameInfo.players[1].words[i];
-                                document.getElementById('user_2_info').appendChild(newP);
+                                document.getElementById('user_2_info').appendChild(newP.content.cloneNode(true));
                             }
                         }
                     }
