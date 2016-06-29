@@ -104,6 +104,15 @@
                     all[a].innerHTML = all[a].name + " " + all[a].name.length;
                     all[a].appendChild(br);
                 }
+                var newP = document.createElement('span');
+                newP.innerHTML = "Total: " + gameInfo.players[0].points;
+                newP.style.color = "black";
+                document.getElementById('user_1_info').appendChild(newP);
+
+                var newP = document.createElement('span');
+                newP.innerHTML = "Total: " + gameInfo.players[1].points;
+                newP.style.color = "black";
+                document.getElementById('user_2_info').appendChild(newP);
 
                 setTimeout(function() {
                     var temp = document.getElementById('end-screen-temp');
