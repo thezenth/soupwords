@@ -150,6 +150,9 @@ gnsp.on('connection', function(socket) {
                 if(parsed['players'][0].points > parsed['players'][1].points) {
                     socket.emit('_winner-and-end', parsed['players'][0].name);
                 }
+                else if(parsed['players'][0].points == parsed['players'][1].points) {
+                    socket.emit('_winner-and-end', 'tie');
+                }
                 else {
                     socket.emit('_winner-and-end', parsed['players'][1].name);
                 }

@@ -118,7 +118,14 @@
 
                 setTimeout(function() {
                     var temp = document.getElementById('end-screen-temp');
-                    temp.content.querySelector('#para').innerHTML = 'Game Over.. and the winner is ' + winner + ', way to go!';
+
+                    if(winner == 'tie') {
+                        temp.content.querySelector('#para').innerHTML = 'Game Over.. and it was a tie! Good job!';
+                    }
+                    else {
+                        temp.content.querySelector('#para').innerHTML = 'Game Over.. and the winner is ' + winner + ', way to go!';
+                    }
+
                     //Clear out what is already there
                     document.getElementById('main').innerHTML = "";
                     //Append the template
