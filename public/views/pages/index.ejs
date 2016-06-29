@@ -88,8 +88,10 @@
                 document.getElementById('main').appendChild(temp.content.cloneNode(true));
             });
             socket.on('_incorrect-word', function(err) {
-                document.getElementById('newword').value = "";
-                document.getElementById('newword').value = err;
+                document.getElementById('error-msg').innerHTML = err;
+                setTimeout(function() {
+                    document.getElementById('error-msg').innerHTML = ""; //clear error message p after 5 seconds
+                }, 5000);
             });
             socket.on('_winner-and-end', function(winner) {
 
@@ -211,10 +213,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-
+        <p id="error-msg"></p>
 
         <div class="row">
             <form onsubmit="return false;">
