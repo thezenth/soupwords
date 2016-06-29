@@ -161,11 +161,17 @@
 
     <body>
         <main id="main">
-            <form onsubmit="return false;">
-                <input id="newuser" name="newuser" type="text">
-                <label for="newuser">Nickname</label>
-                <button onClick="<%- " setUsername('newuser')" %>" id="name-form">Enter</button>
-            </form>
+            <div class="container">
+                <div class="row">
+                    <div class="input-field col s6 m6 l6">
+                        <form onsubmit="return false;">
+                            <input id="newuser" name="newuser" type="text">
+                            <label for="newuser">Nickname</label>
+                            <button onClick="<%- " setUsername('newuser')" %>" id="name-form">Enter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </main>
     </body>
 </html>
