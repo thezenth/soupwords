@@ -26,17 +26,25 @@
             }
             updateTimer(); //initial call
 
+            var player1_already = [];
+            var player2_already = [];
+
             socket.on('_update-game', function(info) {
                 gameInfo = info;
                 if(gameInfo.players[0]) {
                     if (gameInfo.players[0].words) {
                         if (document.getElementById('user_1')) {
                             for (var i = 0; i < gameInfo.players[0].words.length; i++) {
-                                var newP = document.createElement('span');
-                                newP.innerHTML = Array(gameInfo.players[0].words[i].length + 1).join('*');
-                                newP.style.color = "black";
-                                newP.style.type = "password";
-                                document.getElementById('user_1_info').appendChild(newP);
+                                if(player1_already.indexOf(gameInfo.players[0].words[i]) > -1) {
+                                    var br = document.createElement("br");
+                                    var newP = document.createElement('span');
+                                    newP.innerHTML = Array(gameInfo.players[0].words[i].length + 1).join('*');
+                                    newP.style.color = "black";
+                                    newP.style.type = "password";
+                                    newP.appendChild(br);
+                                    document.getElementById('user_1_info').appendChild(newP);
+                                    player1_already.push(gameInfo.players[0].words[i]);
+                                }
                             }
                         }
                     }
@@ -45,11 +53,16 @@
                     if (gameInfo.players[1].words) {
                         if (document.getElementById('user_2')) {
                             for (var i = 0; i < gameInfo.players[1].words.length; i++) {
-                                var newP = document.createElement('span');
-                                newP.innerHTML = Array(gameInfo.players[1].words[i].length + 1).join('*');
-                                newP.style.color = "black";
-                                newP.style.type = "password";
-                                document.getElementById('user_2_info').appendChild(newP);
+                                if(player2_already.indexOf(gameInfo.players[1].words[i]) > -1) {
+                                    var br = document.createElement("br");
+                                    var newP = document.createElement('span');
+                                    newP.innerHTML = Array(gameInfo.players[1].words[i].length + 1).join('*');
+                                    newP.style.color = "black";
+                                    newP.style.type = "password";
+                                    newP.appendChild(br);
+                                    document.getElementById('user_2_info').appendChild(newP);
+                                    player2_already.push(gameInfo.players[1].words[i]);
+                                }
                             }
                         }
                     }
