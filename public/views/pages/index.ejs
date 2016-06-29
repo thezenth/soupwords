@@ -34,6 +34,7 @@
                             for (var i = 0; i < gameInfo.players[0].words.length; i++) {
                                 var newP = document.createElement('span');
                                 newP.innerHTML = gameInfo.players[0].words[i];
+                                newP.style.color = "black";
                                 document.getElementById('user_1_info').appendChild(newP);
                             }
                         }
@@ -45,6 +46,7 @@
                             for (var i = 0; i < gameInfo.players[1].words.length; i++) {
                                 var newP = document.createElement('span');
                                 newP.innerHTML = gameInfo.players[1].words[i];
+                                newP.style.color = "black";
                                 document.getElementById('user_2_info').appendChild(newP);
                             }
                         }
