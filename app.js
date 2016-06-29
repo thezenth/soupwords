@@ -123,13 +123,13 @@ gnsp.on('connection', function(socket) {
                                 parsed['players'][i].points += data.word.length;
                                 parsed['players'][i].words.push(data.word);
                                 console.log('updated server-side game information');
+                                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                             }
                             else {
                                 socket.emit('_incorrect-word', 'You already found this word- good job!');
                             }
                         }
                     }
-                    fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                     if (true) {
                         updateClients(parsed);
                     }
