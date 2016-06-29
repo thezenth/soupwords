@@ -37,7 +37,11 @@ app.get('/', function(req, res) {
     res.render('pages/index');
 });
 
-// Chatroom
+// Game =========================================
+var allLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+function randomInt (low, high) {
+    return Math.floor(Math.random() * (high - low) + low);
+}
 
 var numUsers = 0;
 
@@ -50,17 +54,6 @@ function updateClients(gameInfo) {
 
 gnsp.on('connection', function(socket) {
     var addedUser = false;
-
-    /*socket.once('disconnect', function() {
-        console.log('Got disconnect!');
-
-        //Reset the game data
-        fs.readFile('./session/game.json', function(err, jData) {
-            var parsed = JSON.parse(jData);
-            parsed = Game; //reset the game session data
-            fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
-        });
-    });*/
 
     // when the client emits 'add user', this listens and executes
     socket.on('_add_user', function(username) {
@@ -86,7 +79,15 @@ gnsp.on('connection', function(socket) {
                 fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                 updateClients(parsed);
                 if(parsed['players'].length == 2) {
-                    gnsp.emit('_begin-game');
+                    for(var a = 0; a<16; a++) {
+                        parsed['letters'].push(allLetters[randomInt(0, allLetters.length)]);
+                        fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                    }
+                    if(true) {
+                        if(true) { updateClients(parsed); }
+                        gnsp.emit('_begin-game');
+                    }
+
                 }
             }
         });
