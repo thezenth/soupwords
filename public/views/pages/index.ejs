@@ -100,7 +100,7 @@
             }
 
             function submitWord(id) {
-                var word = document.getElementById(id).value; //look at cleanInput for this...
+                var word = document.getElementById(id).value.toLowerCase(); //look at cleanInput for this...
 
                 if (word) {
                     socket.emit('_submit-word', {word: word, name: myUsername});
