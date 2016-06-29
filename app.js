@@ -125,7 +125,7 @@ gnsp.on('connection', function(socket) {
                                 console.log('updated server-side game information');
                             }
                             else {
-                                socket.emit('_incorrect-word', 'already found');
+                                socket.emit('_incorrect-word', 'You already found this word- good job!');
                             }
                         }
                     }
@@ -134,7 +134,7 @@ gnsp.on('connection', function(socket) {
                         updateClients(parsed);
                     }
                 } else {
-                    socket.emit('_incorrect-word', 'not a word');
+                    socket.emit('_incorrect-word', 'Did not find this word.. maybe the letters are not connected?');
                 }
             }
         });
