@@ -19,7 +19,7 @@
                         socket.emit('_time-up');
                     }
                     else {
-                        document.getElementById('timer').innerHTML = "Time left: " + dif;
+                        document.getElementById('timer').innerHTML = "Time left: " + dif/1000;
                     }
                 }
                 setTimeout(updateTimer, 100)
