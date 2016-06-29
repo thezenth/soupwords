@@ -146,6 +146,7 @@
                 var word = document.getElementById(id).value.toLowerCase(); //look at cleanInput for this...
 
                 if (word) {
+                    document.getElementById(id).value = "";
                     socket.emit('_submit-word', {word: word, name: myUsername});
                 }
             }
