@@ -111,41 +111,47 @@
     </head>
 
     <template id="soup-screen-temp">
-        <div class="row" id="row1">
-            <div class="col s1" id="sq_0">1</div>
-            <div class="col s1" id="sq_1">2</div>
-            <div class="col s1" id="sq_2">3</div>
-            <div class="col s1" id="sq_3">4</div>
-            <div class="col s2" id="user_1">
-                <span id="title_1"></span>
+        <div class="col s12 m6 l6">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <div class="row" id="row1">
+                        <div class="col s1" id="sq_0">1</div>
+                        <div class="col s1" id="sq_1">2</div>
+                        <div class="col s1" id="sq_2">3</div>
+                        <div class="col s1" id="sq_3">4</div>
+                        <div class="col s2" id="user_1">
+                            <span id="title_1"></span>
+                        </div>
+                        <div class="col s2" id="user_2">
+                            <span id="title_2"></span>
+                        </div>
+                    </div>
+                    <div class="row" id="row2">
+                        <div class="col s1" id="sq_4">1</div>
+                        <div class="col s1" id="sq_5">2</div>
+                        <div class="col s1" id="sq_6">3</div>
+                        <div class="col s1" id="sq_7">4</div>
+                    </div>
+                    <div class="row" id="row3">
+                        <div class="col s1" id="sq_8">1</div>
+                        <div class="col s1" id="sq_9">2</div>
+                        <div class="col s1" id="sq_10">3</div>
+                        <div class="col s1" id="sq_11">4</div>
+                    </div>
+                    <div class="row" id="row4">
+                        <div class="col s1" id="sq_12">1</div>
+                        <div class="col s1" id="sq_13">2</div>
+                        <div class="col s1" id="sq_14">3</div>
+                        <div class="col s1" id="sq_15">4</div>
+                    </div>
+                </div>
             </div>
-            <div class="col s2" id="user_2">
-                <span id="title_2"></span>
-            </div>
-        </div>
-        <div class="row" id="row2">
-            <div class="col s1" id="sq_4">1</div>
-            <div class="col s1" id="sq_5">2</div>
-            <div class="col s1" id="sq_6">3</div>
-            <div class="col s1" id="sq_7">4</div>
-        </div>
-        <div class="row" id="row3">
-            <div class="col s1" id="sq_8">1</div>
-            <div class="col s1" id="sq_9">2</div>
-            <div class="col s1" id="sq_10">3</div>
-            <div class="col s1" id="sq_11">4</div>
-        </div>
-        <div class="row" id="row4">
-            <div class="col s1" id="sq_12">1</div>
-            <div class="col s1" id="sq_13">2</div>
-            <div class="col s1" id="sq_14">3</div>
-            <div class="col s1" id="sq_15">4</div>
         </div>
         <div class="row">
             <form onsubmit="return false;">
                 <input id="newword" name="newword" type="text">
                 <label for="newword">Words</label>
-                <button onClick="<%- " submitWord('newword')" %>" id="word-form">Submit</button>
+                <button class="waves-effect waves-light btn" onClick="<%- " submitWord('newword')" %>" id="word-form"><i class="material-icons left">send</i>Submit</button>
             </form>
         </div>
         <p id="timer"></p>
