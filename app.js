@@ -58,10 +58,6 @@ function updateClients(gameInfo) {
 gnsp.on('connection', function(socket) {
     var addedUser = false;
 
-    socket.on('disconnect', function() {
-        console.log('user disconnected');
-    });
-
     // when the client emits 'add user', this listens and executes
     socket.on('_add_user', function(username) {
         if (addedUser) return;
@@ -136,6 +132,20 @@ gnsp.on('connection', function(socket) {
                 } else {
                     socket.emit('_incorrect-word', 'Did not find this word.. maybe the letters are not connected?');
                 }
+            }
+        });
+    });
+    socket.on('disconnect', function() {
+        console.log('user disconnected');
+        socket.broadcast.emit('_user-disconnect');
+        fs.readFile('./session/game.json', function(err, jData) {
+            if (err) {
+                console.log(err);
+            }
+            if(jData) {
+                var parsed = JSON.parse(jData);
+                parsed = Game;
+                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
             }
         });
     });

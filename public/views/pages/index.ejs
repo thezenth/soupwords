@@ -9,23 +9,27 @@
             var gameInfo = {};
             socket.on('_update-game', function(info) {
                 gameInfo = info;
-                if (gameInfo.players[0].words) {
-                    if (document.getElementById('user_1')) {
-                        document.getElementById('user_1').innerHTML = "";
-                        for (var i = 0; i < gameInfo.players[0].words.length; i++) {
-                            var newP = document.createElement('p');
-                            newP.innerHTML = gameInfo.players[0].words[i];
-                            document.getElementById('user_1').appendChild(newP);
+                if(gameInfo.players[0]) {
+                    if (gameInfo.players[0].words) {
+                        if (document.getElementById('user_1')) {
+                            document.getElementById('user_1').innerHTML = "";
+                            for (var i = 0; i < gameInfo.players[0].words.length; i++) {
+                                var newP = document.createElement('p');
+                                newP.innerHTML = gameInfo.players[0].words[i];
+                                document.getElementById('user_1').appendChild(newP);
+                            }
                         }
                     }
                 }
-                if (gameInfo.players[1].words) {
-                    if (document.getElementById('user_2')) {
-                        document.getElementById('user_2').innerHTML = "";
-                        for (var i = 0; i < gameInfo.players[1].words.length; i++) {
-                            var newP = document.createElement('p');
-                            newP.innerHTML = gameInfo.players[1].words[i];
-                            document.getElementById('user_2').appendChild(newP);
+                if(gameInfo.players[1]) {
+                    if (gameInfo.players[1].words) {
+                        if (document.getElementById('user_2')) {
+                            document.getElementById('user_2').innerHTML = "";
+                            for (var i = 0; i < gameInfo.players[1].words.length; i++) {
+                                var newP = document.createElement('p');
+                                newP.innerHTML = gameInfo.players[1].words[i];
+                                document.getElementById('user_2').appendChild(newP);
+                            }
                         }
                     }
                 }
@@ -47,6 +51,13 @@
                 document.getElementById('newword').value = "";
                 document.getElementById('newword').value = err;
             });
+            socket.on('_user-disconnect', function() {
+                var temp = document.getElementById('user-disconnected-screen-temp');
+                //Clear out what is already there
+                document.getElementById('main').innerHTML = "";
+                //Append the template
+                document.getElementById('main').appendChild(temp.content.cloneNode(true));
+            });
             //to be called by the submit button on the username form
             function setUsername(id) {
                 var username = document.getElementById(id).value; //look at cleanInput for this...
@@ -66,10 +77,6 @@
                     socket.emit('_submit-word', {word: word, name: myUsername});
                 }
             }
-
-            function doDisconnect() {
-                socket.emit('_disconnect');
-            }
         </script>
 
     </head>
@@ -80,12 +87,12 @@
             <div class="col s1" id="sq_1">2</div>
             <div class="col s1" id="sq_2">3</div>
             <div class="col s1" id="sq_3">4</div>
-            <!--<div class="col s2" id="user_1">
+            <div class="col s2" id="user_1">
                 <span id="title_1"></span>
             </div>
             <div class="col s2" id="user_2">
                 <span id="title_2"></span>
-            </div>-->
+            </div>
         </div>
         <div class="row" id="row2">
             <div class="col s1" id="sq_4">1</div>
@@ -112,6 +119,10 @@
                 <button onClick="<%- " submitWord('newword')" %>" id="word-form">Submit</button>
             </form>
         </div>
+    </template>
+
+    <template id="user-disconnected-screen-temp">
+        <p>The other user has disconnected. Please reload!</p>
     </template>
 
     <body>

@@ -1,14 +1,8 @@
 var Game = {
     "players": [], //array of Player objs
-    "letters": [] //multidimensional array, see below
+    "letters": [],
+    "boggled": [] 
 }
-
-/*
-* multidimensional array structure
-* [ [ X, X, X ],
-*   [ X, X, X ],
-*   [ X, X, X ] ]
-*/
 
 module.exports = {
     Game: Game
