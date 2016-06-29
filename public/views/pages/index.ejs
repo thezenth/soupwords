@@ -41,6 +41,8 @@
                                     newP.innerHTML = Array(gameInfo.players[0].words[i].length + 1).join('*');
                                     newP.style.color = "black";
                                     newP.style.type = "password";
+                                    newP.id = "hidden-word";
+                                    newP.name = gameInfo.players[0].words[i]; //store name to get it and reveal at end of the game..
                                     newP.appendChild(br);
                                     document.getElementById('user_1_info').appendChild(newP);
                                     player1_already.push(gameInfo.players[0].words[i]);
@@ -59,6 +61,8 @@
                                     newP.innerHTML = Array(gameInfo.players[1].words[i].length + 1).join('*');
                                     newP.style.color = "black";
                                     newP.style.type = "password";
+                                    newP.id = "hidden-word";
+                                    newP.name = gameInfo.players[1].words[i];
                                     newP.appendChild(br);
                                     document.getElementById('user_2_info').appendChild(newP);
                                     player2_already.push(gameInfo.players[1].words[i]);
@@ -88,12 +92,27 @@
                 document.getElementById('newword').value = err;
             });
             socket.on('_winner-and-end', function(winner) {
-                var temp = document.getElementById('end-screen-temp');
-                temp.content.querySelector('#para').innerHTML = 'Game Over.. and the winner is ' + winner + ', way to go!';
-                //Clear out what is already there
-                document.getElementById('main').innerHTML = "";
-                //Append the template
-                document.getElementById('main').appendChild(temp.content.cloneNode(true));
+
+                //Clean up some variables..
+                player1_already = [];
+                player2_already = [];
+
+                //Reveal words
+                var all = document.querySelectorAll('#hidden-word');
+                for(var a = 0; a<all.length;a++) {
+                    var br = document.createElement("br");
+                    all[a].innerHTML = all[a].name;
+                    all[a].appendChild(br);
+                }
+
+                setTimeout(function() {
+                    var temp = document.getElementById('end-screen-temp');
+                    temp.content.querySelector('#para').innerHTML = 'Game Over.. and the winner is ' + winner + ', way to go!';
+                    //Clear out what is already there
+                    document.getElementById('main').innerHTML = "";
+                    //Append the template
+                    document.getElementById('main').appendChild(temp.content.cloneNode(true));
+                }, 7500);
             });
             socket.on('_user-disconnect', function() {
                 var temp = document.getElementById('user-disconnected-screen-temp');
