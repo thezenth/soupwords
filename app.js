@@ -46,6 +46,9 @@ function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
+var timerOn = false;
+var timerEnd = 0;
+
 var numUsers = 0;
 
 var gnsp = io.of('/game-namespace');
@@ -94,7 +97,8 @@ gnsp.on('connection', function(socket) {
                         if (true) {
                             updateClients(parsed);
                         }
-                        gnsp.emit('_begin-game');
+                        timerEnd = Date.now() + 60000;
+                        gnsp.emit('_begin-game', timerEnd);
                     }
 
                 }
@@ -131,6 +135,22 @@ gnsp.on('connection', function(socket) {
                     }
                 } else {
                     socket.emit('_incorrect-word', 'Did not find this word.. maybe the letters are not connected?');
+                }
+            }
+        });
+    });
+    socket.once('_time-up', function() {
+        fs.readFile('./session/game.json', function(err, jData) {
+            if(err) {
+                console.log(err);
+            }
+            if (jData) {
+                var parsed = JSON.parse(jData);
+                if(parsed['players'][0].points > parsed['players'][1].points) {
+                    socket.emit('_winner-and-end', parsed['players'][0].name);
+                }
+                else {
+                    socket.emit('_winner-and-end', parsed['players'][1].name);
                 }
             }
         });

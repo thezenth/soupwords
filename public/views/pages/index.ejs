@@ -7,6 +7,25 @@
 
             var myUsername = "";
             var gameInfo = {};
+
+            var timerOn = false;
+            var timerEnd = 0;
+
+            function updateTimer() {
+                if(timerOn) {
+                    var now = Date.now();
+                    var dif = timerEnd - now;
+                    if(dif <= 0) {
+                        socket.emit('_time-up');
+                    }
+                    else {
+                        document.getElementById('timer').innerHTML = "Time left: " + dif;
+                    }
+                }
+                setTimeout(updateTimer, 100)
+            }
+            updateTimer(); //initial call
+
             socket.on('_update-game', function(info) {
                 gameInfo = info;
                 if(gameInfo.players[0]) {
@@ -34,7 +53,9 @@
                     }
                 }
             });
-            socket.on('_begin-game', function() {
+            socket.on('_begin-game', function(endTime) {
+                timerOn = true;
+                timerEnd = endTime;
                 var temp = document.getElementById('soup-screen-temp');
                 for (var a = 0; a < 16; a++) {
                     temp.content.querySelector('#sq_' + a).innerHTML = gameInfo.letters[a];
@@ -50,6 +71,14 @@
             socket.on('_incorrect-word', function(err) {
                 document.getElementById('newword').value = "";
                 document.getElementById('newword').value = err;
+            });
+            socket.on('_winner-and-end', function(winner) {
+                var temp = document.getElementById('end-screen-temp');
+                temp.content.querySelector('#para').innerHTML = 'Game Over.. and the winner is ' + winner + ', way to go!';
+                //Clear out what is already there
+                document.getElementById('main').innerHTML = "";
+                //Append the template
+                document.getElementById('main').appendChild(temp.content.cloneNode(true));
             });
             socket.on('_user-disconnect', function() {
                 var temp = document.getElementById('user-disconnected-screen-temp');
@@ -119,10 +148,15 @@
                 <button onClick="<%- " submitWord('newword')" %>" id="word-form">Submit</button>
             </form>
         </div>
+        <p id="timer"></p>
     </template>
 
     <template id="user-disconnected-screen-temp">
         <p>The other user has disconnected. Please reload!</p>
+    </template>
+
+    <template id="end-screen-temp">
+        <p id="para"></p>
     </template>
 
     <body>
