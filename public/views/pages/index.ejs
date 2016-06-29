@@ -101,7 +101,7 @@
                 var all = document.querySelectorAll('#hidden-word');
                 for(var a = 0; a<all.length;a++) {
                     var br = document.createElement("br");
-                    all[a].innerHTML = all[a].name;
+                    all[a].innerHTML = all[a].name + " " + all[a].name.length;
                     all[a].appendChild(br);
                 }
 
