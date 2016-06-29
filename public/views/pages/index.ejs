@@ -35,7 +35,7 @@
                     if (gameInfo.players[0].words) {
                         if (document.getElementById('user_1')) {
                             for (var i = 0; i < gameInfo.players[0].words.length; i++) {
-                                if(player1_already.indexOf(gameInfo.players[0].words[i]) > -1) {
+                                if(player1_already.indexOf(gameInfo.players[0].words[i]) == -1) {
                                     var br = document.createElement("br");
                                     var newP = document.createElement('span');
                                     newP.innerHTML = Array(gameInfo.players[0].words[i].length + 1).join('*');
@@ -53,7 +53,7 @@
                     if (gameInfo.players[1].words) {
                         if (document.getElementById('user_2')) {
                             for (var i = 0; i < gameInfo.players[1].words.length; i++) {
-                                if(player2_already.indexOf(gameInfo.players[1].words[i]) > -1) {
+                                if(player2_already.indexOf(gameInfo.players[1].words[i]) == -1) {
                                     var br = document.createElement("br");
                                     var newP = document.createElement('span');
                                     newP.innerHTML = Array(gameInfo.players[1].words[i].length + 1).join('*');
