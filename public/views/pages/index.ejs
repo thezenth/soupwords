@@ -32,7 +32,7 @@
                     if (gameInfo.players[0].words) {
                         if (document.getElementById('user_1')) {
                             for (var i = 0; i < gameInfo.players[0].words.length; i++) {
-                                var newP = document.createElement('p');
+                                var newP = document.createElement('span');
                                 newP.innerHTML = gameInfo.players[0].words[i];
                                 document.getElementById('user_1_info').appendChild(newP.content.cloneNode(true));
                             }
