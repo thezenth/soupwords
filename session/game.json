@@ -1,4 +1,32 @@
 {
-	"players": [],
-	"letters": []
+	"players": [
+		{
+			"name": "noah",
+			"words": [],
+			"points": 0
+		},
+		{
+			"name": "lajja",
+			"words": [],
+			"points": 0
+		}
+	],
+	"letters": [
+		"A",
+		"X",
+		"E",
+		"T",
+		"Q",
+		"Y",
+		"M",
+		"T",
+		"C",
+		"B",
+		"S",
+		"B",
+		"L",
+		"D",
+		"Y",
+		"N"
+	]
 }

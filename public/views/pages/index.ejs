@@ -11,7 +11,9 @@
             });
             socket.on('_begin-game', function() {
                 var temp = document.getElementById('soup-screen-temp');
-
+                for(var i = 0; i<16; i++) {
+                    temp.content.querySelector('#sq_' + i).innerHTML = gameInfo.letters[i];
+                }
                 //Clear out what is already there
                 document.getElementById('main').innerHTML = "";
                 //Append the template
@@ -39,29 +41,29 @@
     </head>
 
     <template id="soup-screen-temp">
-        <div class="row">
-            <div class="col s1">1</div>
-            <div class="col s1">2</div>
-            <div class="col s1">3</div>
-            <div class="col s1">4</div>
+        <div class="row" id="row1">
+            <div class="col s1" id="sq_0">1</div>
+            <div class="col s1" id="sq_1">2</div>
+            <div class="col s1" id="sq_2">3</div>
+            <div class="col s1" id="sq_3">4</div>
         </div>
-        <div class="row">
-            <div class="col s1">1</div>
-            <div class="col s1">2</div>
-            <div class="col s1">3</div>
-            <div class="col s1">4</div>
+        <div class="row" id="row2">
+            <div class="col s1" id="sq_4">1</div>
+            <div class="col s1" id="sq_5">2</div>
+            <div class="col s1" id="sq_6">3</div>
+            <div class="col s1" id="sq_7">4</div>
         </div>
-        <div class="row">
-            <div class="col s1">1</div>
-            <div class="col s1">2</div>
-            <div class="col s1">3</div>
-            <div class="col s1">4</div>
+        <div class="row" id="row3">
+            <div class="col s1" id="sq_8">1</div>
+            <div class="col s1" id="sq_9">2</div>
+            <div class="col s1" id="sq_10">3</div>
+            <div class="col s1" id="sq_11">4</div>
         </div>
-        <div class="row">
-            <div class="col s1">1</div>
-            <div class="col s1">2</div>
-            <div class="col s1">3</div>
-            <div class="col s1">4</div>
+        <div class="row" id="row4">
+            <div class="col s1" id="sq_12">1</div>
+            <div class="col s1" id="sq_13">2</div>
+            <div class="col s1" id="sq_14">3</div>
+            <div class="col s1" id="sq_15">4</div>
         </div>
     </template>
 
