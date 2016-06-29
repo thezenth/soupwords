@@ -146,6 +146,7 @@ gnsp.on('connection', function(socket) {
             }
             if (jData) {
                 var parsed = JSON.parse(jData);
+                console.log(jData);
                 if(parsed['players'][0].points > parsed['players'][1].points) {
                     socket.emit('_winner-and-end', parsed['players'][0].name);
                 }
