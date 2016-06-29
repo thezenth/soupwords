@@ -41,8 +41,8 @@ app.get('/', function(req, res) {
 
 // Game =========================================
 var allLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-var words = ['BUTT'];
-function randomInt (low, high) {
+
+function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
@@ -58,8 +58,8 @@ function updateClients(gameInfo) {
 gnsp.on('connection', function(socket) {
     var addedUser = false;
 
-    socket.on('_disconnect', function() {
-        socket.disconnect();
+    socket.on('disconnect', function() {
+        console.log('user disconnected');
     });
 
     // when the client emits 'add user', this listens and executes
@@ -85,17 +85,19 @@ gnsp.on('connection', function(socket) {
                 parsed['players'].push(new_player);
                 fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                 updateClients(parsed);
-                if(parsed['players'].length == 2) {
-                    for(var a = 0; a<16; a++) {
+                if (parsed['players'].length == 2) {
+                    for (var a = 0; a < 16; a++) {
                         parsed['letters'].push(allLetters[randomInt(0, allLetters.length)]);
                         fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                     }
-                    if(true) {
+                    if (true) {
                         parsed['boggled'] = boggle(parsed['letters'].join(''));
                         fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                     }
-                    if(true) {
-                        if(true) { updateClients(parsed); }
+                    if (true) {
+                        if (true) {
+                            updateClients(parsed);
+                        }
                         gnsp.emit('_begin-game');
                     }
 
@@ -104,17 +106,37 @@ gnsp.on('connection', function(socket) {
         });
         addedUser = true;
     });
-    socket.on('_submit-word', function(word) {
-        if(word in words) {
-            fs.readFile('./session/game.json', function(err, jData) {
-                if (err) {
-                    console.log(err);
-                }
+    socket.on('_submit-word', function(data) {
+        console.log(data.name + ' submitted a word, checking...');
+        fs.readFile('./session/game.json', function(err, jData) {
+            if (err) {
+                console.log(err);
+            }
 
-                if(jData) {
-                    console.log('got some data');
+            if (jData) {
+                var parsed = JSON.parse(jData);
+                if (parsed['boggled'].indexOf(data.word) > -1) {
+                    for (var i = 0; i < parsed['players'].length; i++) {
+                        if (parsed['players'][i].name == data.name) {
+                            if (parsed['players'][i].words.indexOf(data.word) == -1) {
+                                console.log(data.name + ' found a word, ' + data.word + '!');
+                                parsed['players'][i].points += data.word.length;
+                                parsed['players'][i].words.push(data.word);
+                                console.log('updated server-side game information');
+                            }
+                            else {
+                                socket.emit('_incorrect-word', 'already found');
+                            }
+                        }
+                    }
+                    fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                    if (true) {
+                        updateClients(parsed);
+                    }
+                } else {
+                    socket.emit('_incorrect-word', 'not a word');
                 }
-            })
-        }
+            }
+        });
     });
 });
