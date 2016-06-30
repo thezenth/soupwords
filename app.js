@@ -149,15 +149,19 @@ gnsp.on('connection', function(socket) {
                 console.log(jData);
                 if(parsed['players'][0].points > parsed['players'][1].points) {
                     socket.emit('_winner-and-end', parsed['players'][0].name);
+                    parsed = Game;
+                    fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                 }
                 else if(parsed['players'][0].points == parsed['players'][1].points) {
                     socket.emit('_winner-and-end', 'tie');
+                    parsed = Game;
+                    fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                 }
                 else {
                     socket.emit('_winner-and-end', parsed['players'][1].name);
+                    parsed = Game;
+                    fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
                 }
-                parsed = Game;
-                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
             }
         });
     });
