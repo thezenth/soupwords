@@ -141,6 +141,11 @@
             });
             //to be called by the submit button on the username form
             function setUsername(id) {
+                //Set loading stuff
+                var image = document.createElement('img');
+                image.src = '/images/loading.gif';
+                document.querySelector('.container').appendChild();
+
                 var username = document.getElementById(id).value; //look at cleanInput for this...
 
                 // If the username is valid
@@ -248,6 +253,8 @@
     <body>
         <main id="main">
             <div class="container">
+                <span>Soupwords!</span>
+                <img src="/images/wordsofsoup.jpg">
                 <div class="row">
                     <div class="input-field col s6 m6 l6">
                         <form onsubmit="return false;">
