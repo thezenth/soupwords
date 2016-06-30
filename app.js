@@ -156,10 +156,6 @@ gnsp.on('connection', function(socket) {
                 else {
                     socket.emit('_winner-and-end', parsed['players'][1].name);
                 }
-                if (true) {
-                    parsed = Game;
-                    fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
-                }
             }
         });
     });
