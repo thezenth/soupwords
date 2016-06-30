@@ -152,8 +152,17 @@
                     myUsername = username;
                     var image = document.createElement('img');
                     image.src = '/images/loading.gif';
+
+                    var div1 = document.createElement('div');
+                    div1.className = "row";
+                    var div2 = document.createElement('div');
+                    div2.className = "s12 m6 l6";
+
+                    div2.appendChild(image);
+                    div1.appendChild(div2);
+
                     document.querySelector('.container').innerHTML = "";
-                    document.querySelector('.container').appendChild(image); //gotta do all this after the username has been retreived from the doc
+                    document.querySelector('.container').appendChild(div1); //gotta do all this after the username has been retreived from the doc
                     socket.emit('_add_user', myUsername);
                 }
             }
@@ -255,8 +264,16 @@
     <body>
         <main id="main">
             <div class="container">
-                <span>Soupwords!</span>
-                <img src="/images/wordsofsoup.jpg">
+                <div class="row">
+                    <div class="s12 m6 l8">
+                        <span>Soupwords!</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="s12 m6 l6">
+                        <img src="/images/wordsofsoup.jpg">
+                    </div>
+                </div>
                 <div class="row">
                     <div class="input-field col s6 m6 l6">
                         <form onsubmit="return false;">
