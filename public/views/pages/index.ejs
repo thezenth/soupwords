@@ -152,7 +152,8 @@
                     myUsername = username;
                     var image = document.createElement('img');
                     image.src = '/images/loading.gif';
-                    document.querySelector('.container').innerHTML = image; //gotta do all this after the username has been retreived from the doc
+                    document.querySelector('.container').innerHTML = "";
+                    document.querySelector('.container').appendChild(image); //gotta do all this after the username has been retreived from the doc
                     socket.emit('_add_user', myUsername);
                 }
             }
