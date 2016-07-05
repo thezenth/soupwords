@@ -40,6 +40,7 @@ app.get('/', function(req, res) {
 });
 
 // Game =========================================
+var vowels = ['A', 'E', 'I', 'O', 'U'];
 var allLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
 function randomInt(low, high) {
@@ -82,16 +83,24 @@ gnsp.on('connection', function(socket) {
             if (jData) {
                 var parsed = JSON.parse(jData);
                 parsed['players'].push(new_player);
-                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the game.json file indented with tabs
                 updateClients(parsed);
+                var remainingVowels = 6; //make at least 4 of the letters vowels
                 if (parsed['players'].length == 2) {
                     for (var a = 0; a < 16; a++) {
-                        parsed['letters'].push(allLetters[randomInt(0, allLetters.length)]);
-                        fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+
+                        if(remainingVowels > 0) {
+                            parsed['letters'].push(vowels[randomInt(0, allLetters.length)]); //choosing random vowels
+                            remainingVowels--;
+                        } else {
+                            parsed['letters'].push(allLetters[randomInt(0, allLetters.length)]); //choosing random letters, from all the letters
+                        }
+
+                        fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the game.json file indented with tabs
                     }
                     if (true) {
                         parsed['boggled'] = boggle(parsed['letters'].join(''));
-                        fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                        fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the game.json file indented with tabs
                     }
                     if (true) {
                         if (true) {
@@ -123,7 +132,7 @@ gnsp.on('connection', function(socket) {
                                 parsed['players'][i].points += data.word.length;
                                 parsed['players'][i].words.push(data.word);
                                 console.log('updated server-side game information');
-                                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the game.json file indented with tabs
                             }
                             else {
                                 socket.emit('_incorrect-word', 'You already found this word- good job!');
@@ -169,7 +178,7 @@ gnsp.on('connection', function(socket) {
             if(jData) {
                 var parsed = JSON.parse(jData);
                 parsed = Game;
-                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+                fs.writeFile('./session/game.json', JSON.stringify(parsed, null, '\t')); //also, include null and '\t' arguments to keep the game.json file indented with tabs
             }
         });
     });
