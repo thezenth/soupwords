@@ -1,0 +1,1 @@
+- keyboard to enter words instead of clicking on letters

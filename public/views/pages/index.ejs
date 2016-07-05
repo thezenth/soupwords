@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+    <head>
+        <% include ../partials/head %>
+        <script>
+            var socket = io('http://158.85.15.58:3000/game-namespace');
+
+            var myUsername = "";
+            var gameInfo = {};
+
+            var timerOn = false;
+            var timerEnd = 0;
+
+            function updateTimer() {
+                if(timerOn) {
+                    var now = Date.now();
+                    var dif = timerEnd - now;
+                    if(dif <= 0) {
+                        socket.emit('_time-up');
+                    }
+                    else {
+                        document.getElementById('timer').innerHTML = "Time left: " + dif/1000;
+                    }
+                }
+                setTimeout(updateTimer, 100)
+            }
+            updateTimer(); //initial call
+
+            var player1_already = [];
+            var player2_already = [];
+
+            socket.on('_update-game', function(info) {
+                gameInfo = info;
+                if(gameInfo.players[0]) {
+                    if (gameInfo.players[0].words) {
+                        if (document.getElementById('user_1')) {
+                            for (var i = 0; i < gameInfo.players[0].words.length; i++) {
+                                if(player1_already.indexOf(gameInfo.players[0].words[i]) == -1) {
+                                    var br = document.createElement("br");
+                                    var newP = document.createElement('span');
+                                    newP.innerHTML = Array(gameInfo.players[0].words[i].length + 1).join('*');
+                                    newP.style.color = "black";
+                                    newP.style.type = "password";
+                                    newP.id = "hidden-word";
+                                    newP.name = gameInfo.players[0].words[i]; //store name to get it and reveal at end of the game..
+                                    newP.appendChild(br);
+                                    document.getElementById('user_1_info').appendChild(newP);
+                                    player1_already.push(gameInfo.players[0].words[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+                if(gameInfo.players[1]) {
+                    if (gameInfo.players[1].words) {
+                        if (document.getElementById('user_2')) {
+                            for (var i = 0; i < gameInfo.players[1].words.length; i++) {
+                                if(player2_already.indexOf(gameInfo.players[1].words[i]) == -1) {
+                                    var br = document.createElement("br");
+                                    var newP = document.createElement('span');
+                                    newP.innerHTML = Array(gameInfo.players[1].words[i].length + 1).join('*');
+                                    newP.style.color = "black";
+                                    newP.style.type = "password";
+                                    newP.id = "hidden-word";
+                                    newP.name = gameInfo.players[1].words[i];
+                                    newP.appendChild(br);
+                                    document.getElementById('user_2_info').appendChild(newP);
+                                    player2_already.push(gameInfo.players[1].words[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            socket.on('_begin-game', function(endTime) {
+                timerOn = true;
+                timerEnd = endTime;
+                var temp = document.getElementById('soup-screen-temp');
+                for (var a = 0; a < 16; a++) {
+                    temp.content.querySelector('#sq_' + a).innerHTML = gameInfo.letters[a];
+                }
+                temp.content.querySelector('#title_1').innerHTML = gameInfo.players[0].name;
+                temp.content.querySelector('#title_2').innerHTML = gameInfo.players[1].name;
+
+                //Clear out what is already there
+                document.getElementById('main').innerHTML = "";
+                //Append the template
+                document.getElementById('main').appendChild(temp.content.cloneNode(true));
+            });
+            socket.on('_incorrect-word', function(err) {
+                document.getElementById('error-msg').innerHTML = err;
+                setTimeout(function() {
+                    document.getElementById('error-msg').innerHTML = ""; //clear error message p after 5 seconds
+                }, 5000);
+            });
+            socket.on('_winner-and-end', function(winner) {
+
+                //Clean up some variables..
+                player1_already = [];
+                player2_already = [];
+
+                //Reveal words
+                var all = document.querySelectorAll('#hidden-word');
+                for(var a = 0; a<all.length;a++) {
+                    var br = document.createElement("br");
+                    all[a].innerHTML = all[a].name + " " + all[a].name.length;
+                    all[a].appendChild(br);
+                }
+                var newP = document.createElement('span');
+                newP.innerHTML = "Total: " + gameInfo.players[0].points;
+                newP.style.color = "black";
+                document.getElementById('user_1_info').appendChild(newP);
+
+                var newP = document.createElement('span');
+                newP.innerHTML = "Total: " + gameInfo.players[1].points;
+                newP.style.color = "black";
+                document.getElementById('user_2_info').appendChild(newP);
+
+                setTimeout(function() {
+                    var temp = document.getElementById('end-screen-temp');
+
+                    if(winner == 'tie') {
+                        temp.content.querySelector('#para').innerHTML = 'Game Over.. and it was a tie! Good job!';
+                    }
+                    else {
+                        temp.content.querySelector('#para').innerHTML = 'Game Over.. and the winner is ' + winner + ', way to go!';
+                    }
+
+                    //Clear out what is already there
+                    document.getElementById('main').innerHTML = "";
+                    //Append the template
+                    document.getElementById('main').appendChild(temp.content.cloneNode(true));
+                }, 7500);
+            });
+            socket.on('_user-disconnect', function() {
+                var temp = document.getElementById('user-disconnected-screen-temp');
+                //Clear out what is already there
+                document.getElementById('main').innerHTML = "";
+                //Append the template
+                document.getElementById('main').appendChild(temp.content.cloneNode(true));
+            });
+            //to be called by the submit button on the username form
+            function setUsername(id) {
+                //Set loading stuff
+
+
+                var username = document.getElementById(id).value; //look at cleanInput for this...
+
+                // If the username is valid
+                if (username) {
+                    // Tell the server your username
+                    myUsername = username;
+                    var image = document.createElement('img');
+                    image.src = '/images/loading.gif';
+
+                    var div1 = document.createElement('div');
+                    div1.className = "row";
+                    var div2 = document.createElement('div');
+                    div2.className = "s12 m6 l6";
+
+                    div2.appendChild(image);
+                    div1.appendChild(div2);
+
+                    document.querySelector('.container').innerHTML = "";
+                    document.querySelector('.container').appendChild(div1); //gotta do all this after the username has been retreived from the doc
+                    socket.emit('_add_user', myUsername);
+                }
+            }
+
+            function submitWord(id) {
+                var word = document.getElementById(id).value.toLowerCase(); //look at cleanInput for this...
+
+                if (word) {
+                    document.getElementById(id).value = "";
+                    socket.emit('_submit-word', {word: word, name: myUsername});
+                }
+            }
+        </script>
+
+    </head>
+
+    <template id="soup-screen-temp">
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <div class="row" id="row1">
+                            <div class="col s1" id="sq_0">1</div>
+                            <div class="col s1" id="sq_1">2</div>
+                            <div class="col s1" id="sq_2">3</div>
+                            <div class="col s1" id="sq_3">4</div>
+
+                        </div>
+                        <div class="row" id="row2">
+                            <div class="col s1" id="sq_4">1</div>
+                            <div class="col s1" id="sq_5">2</div>
+                            <div class="col s1" id="sq_6">3</div>
+                            <div class="col s1" id="sq_7">4</div>
+                        </div>
+                        <div class="row" id="row3">
+                            <div class="col s1" id="sq_8">1</div>
+                            <div class="col s1" id="sq_9">2</div>
+                            <div class="col s1" id="sq_10">3</div>
+                            <div class="col s1" id="sq_11">4</div>
+                        </div>
+                        <div class="row" id="row4">
+                            <div class="col s1" id="sq_12">1</div>
+                            <div class="col s1" id="sq_13">2</div>
+                            <div class="col s1" id="sq_14">3</div>
+                            <div class="col s1" id="sq_15">4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6 m6 l6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <div class="col s2" id="user_1">
+                            <span id="title_1"></span>
+                            <div id="user_1_info">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col s6 m6 l6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <div class="col s2" id="user_2">
+                            <span id="title_2"></span>
+                            <div id="user_2_info">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p id="error-msg"></p>
+
+        <div class="row">
+            <form onsubmit="return false;">
+                <input id="newword" name="newword" type="text">
+                <label for="newword">Words</label>
+                <button class="waves-effect waves-light btn" onClick="<%- " submitWord('newword')" %>" id="word-form"><i class="material-icons left">send</i>Submit</button>
+            </form>
+        </div>
+
+
+
+        <p id="timer"></p>
+    </template>
+
+    <template id="user-disconnected-screen-temp">
+        <p>The other user has disconnected. Please reload!</p>
+    </template>
+
+    <template id="end-screen-temp">
+        <p id="para"></p>
+    </template>
+
+    <body>
+        <main id="main">
+            <div class="container">
+                <div class="row">
+                    <div class="s12 m6 l8">
+                        <span>Soupwords!</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="s12 m6 l6">
+                        <img src="/images/wordsofsoup.jpg">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6 m6 l6">
+                        <form onsubmit="return false;">
+                            <input id="newuser" name="newuser" type="text">
+                            <label for="newuser">Nickname</label>
+                            <button class="waves-effect waves-light btn" onClick="<%- " setUsername('newuser')" %>" id="name-form">Enter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
