@@ -90,7 +90,7 @@ gnsp.on('connection', function(socket) {
                     for (var a = 0; a < 16; a++) {
 
                         if(remainingVowels > 0) {
-                            parsed['letters'].push(vowels[randomInt(0, allLetters.length)]); //choosing random vowels
+                            parsed['letters'].push(vowels[randomInt(0, vowels.length)]); //choosing random vowels
                             remainingVowels--;
                         } else {
                             parsed['letters'].push(allLetters[randomInt(0, allLetters.length)]); //choosing random letters, from all the letters
